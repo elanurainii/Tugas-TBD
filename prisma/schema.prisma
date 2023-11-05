@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id        String   @id @default(uuid())
+  username  String
+  password  String
+  createdAt DateTime @default(now())
+  update    DateTime @updatedAt
+}
+
+model MATA_KULIAH {
+  ID_MK     String     @id @db.VarChar(10)
+  NAME_MK   String     @db.NVarChar(50)
+  SKS       Int?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  AUDIT_MK  AUDIT_MK[]
+}
+
+model AUDIT_MK {
+  ID          Int          @id(map: "PK__AUDIT_MK__3214EC27E0AA82A9") @default(autoincrement())
+  ID_MK       String?      @db.VarChar(10)
+  SKS_NEW     Int?
+  SKS_OLD     Int?
+  NAME_NEW    String?      @db.NVarChar(50)
+  NAME_OLD    String?      @db.NVarChar(50)
+  DATE        DateTime?    @db.DateTime
+  USER        String?      @db.NVarChar(50)
+  MATA_KULIAH MATA_KULIAH? @relation(fields: [ID_MK], references: [ID_MK], onDelete: Cascade, map: "FK__AUDIT_MK__USER__4CA06362")
+}
